@@ -22,7 +22,8 @@ class App extends React.Component {
       movieMatch: '',
       addedMovies: '',
       watchList: null,
-      movieSelected: ''
+      movieSelected: '',
+      setValue: true
     }
     //handlers
     this.inputHandler = this.inputHandler.bind(this);
@@ -64,17 +65,20 @@ class App extends React.Component {
     event.preventDefault();
     // console.log('addPressed');
     const addMovies = this.state.addInput;
-    this.setState({ addedMovies: [...this.state.addedMovies, { title: addMovies, watched: false }] });
+    //adds it to another array of movies
+    // this.setState({ addedMovies: [...this.state.addedMovies, { title: addMovies, watched: false }] });
+    //adds it to the movies
+    this.setState({ movies: [...this.state.movies, { title: addMovies, watched: false }] });
   }
 
   watchedHandler(event) {
     event.preventDefault();
-    this.setState({watchList: true})
+    this.setState({setValue: false});
   }
 
   toWatchHandler(event) {
     event.preventDefault();
-    this.setState({watchList: false})
+    this.setState({setValue: true});
   }
  //handler to change the state of each movie to true
   toggleHandler(event, title) {
@@ -82,6 +86,11 @@ class App extends React.Component {
     const name = title;
     console.log('The button was pressed');
     this.setState({movieSelected: title});
+    //filter movies and return everything except the target movie
+    const newArray = this.state.movies.filter(match => match.title !== title);
+    this.setState({movies: newArray});
+    this.setState({moviesWatched: [...this.state.moviesWatched, {title: title, watched: true}]})
+      //set state of movies to that new array
     // this.setState({movies: {title: name, watched: false}});
   }
 
@@ -115,7 +124,7 @@ class App extends React.Component {
 
         <h2>Test</h2>
 
-        {(this.state.watchList === true) ?  <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggleHandler}/> :  <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>}
+        {(this.state.setValue === false) ?  <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggleHandler}/> :  <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>}
 
       </div>)
   }
