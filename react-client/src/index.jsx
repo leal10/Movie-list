@@ -4,6 +4,9 @@ import $ from 'jquery';
 import MovieList from './components/MovieList.jsx';
 import Matches from './components/Matches.jsx';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import TextField from '@material-ui/core/TextField';
 
 
 class App extends React.Component {
@@ -110,39 +113,45 @@ class App extends React.Component {
   }
 
   //if pressed is true and movieMatch is an empty string
-    // no result found
-    // {(this.state.pressed === true && this.state.movieMatch === '' ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>No result found</div>)}
+  // no result found
+  // {(this.state.pressed === true && this.state.movieMatch === '' ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>No result found</div>)}
 
 
   render() {
 
     return (
-      <div class='main'>
+      <div>
         <Grid container spacing={3}>
           <Grid item xs={3}></Grid>
           <Grid item xs={6}>
-            <h2>Movie List</h2>
+            <h1>Movie List</h1>
           </Grid>
           <Grid item xs={3}></Grid>
           <Grid item xs={3}></Grid>
           <Grid item xs={6}>
             <form>
-              <input onChange={this.inputAddHandler} type="text" placeholder="Add movie title here"></input>
-              <button onClick={this.addButtonHandler} >Add</button>
+              {/* <input onChange={this.inputAddHandler} type="text" placeholder="Add movie title here"></input> */}
+              <TextField onChange={this.inputAddHandler} size="small" id="outlined-basic" label="Add movie title here" variant="outlined" />
+              {/* <button onClick={this.addButtonHandler} >Add</button> */}
+              <Button color="secondary" variant="outlined" size="small" onClick={this.addButtonHandler}>
+                Add
+              </Button>
             </form>
           </Grid>
           <Grid item xs={3}></Grid>
           <Grid item xs={3}></Grid>
           <Grid item xs={3}>
-            <form>
-              <button onClick={this.watchedHandler} >Watched</button>
-              <button onClick={this.toWatchHandler} >To Watch</button>
-            </form>
+            <ButtonGroup color="secondary" aria-label="outlined secondary button group">
+              <Button onClick={this.watchedHandler} >Watched</Button>
+              <Button onClick={this.toWatchHandler} >To Watch</Button>
+            </ButtonGroup>
           </Grid>
           <Grid item xs={3}>
             <form>
-              <input onChange={this.inputHandler} type='text' placeholder='Search...'></input>
-              <button onClick={this.sumbitButtonHandler}>Go!</button>
+              {/* <input onChange={this.inputHandler} type='text' placeholder='Search...'></input> */}
+              <TextField onChange={this.inputHandler} size="small" id="outlined-basic" label="Search..." variant="outlined" />
+              {/* <button onClick={this.sumbitButtonHandler}>Go!</button> */}
+              <Button color="secondary" variant="outlined" size="small" onClick={this.sumbitButtonHandler}>Go!</Button>
             </form>
           </Grid>
           <Grid item xs={3}></Grid>

@@ -6,6 +6,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +34,8 @@ export default function Movie (props) {
         <AccordionDetails>
           <Typography>
             Movie Details
-            <button onClick={(event) => {props.toggleHandler(event, props.title)}}>Watched</button>
+            {/* <button onClick={(event) => {props.toggleHandler(event, props.title)}}>Watched</button> */}
+            <Button onClick={(event) => {props.toggleHandler(event, props.title)}} color="secondary" variant="outlined" size="small">Watched</Button>
           </Typography>
         </AccordionDetails>
       </Accordion>
