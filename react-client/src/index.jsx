@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import MovieList from './components/MovieList.jsx';
 import Matches from './components/Matches.jsx';
+import Grid from '@material-ui/core/Grid';
 
 
 class App extends React.Component {
@@ -16,14 +17,15 @@ class App extends React.Component {
         { title: 'Sunshine', watched: false },
         { title: 'Ex Machina', watched: false },
       ],
-      moviesWatched: [{title: 'Toy Story', watched: true}],
+      moviesWatched: [{ title: 'Toy Story', watched: true }],
       searchInput: '',
       addInput: '',
       movieMatch: '',
       addedMovies: '',
       watchList: null,
       movieSelected: '',
-      setValue: true
+      setValue: true,
+      pressed: false
     }
     //handlers
     this.inputHandler = this.inputHandler.bind(this);
@@ -33,6 +35,7 @@ class App extends React.Component {
     this.watchedHandler = this.watchedHandler.bind(this);
     this.toWatchHandler = this.toWatchHandler.bind(this);
     this.toggleHandler = this.toggleHandler.bind(this);
+    this.toggle2Handler = this.toggle2Handler.bind(this);
   }
 
   componentDidMount() {
@@ -51,6 +54,7 @@ class App extends React.Component {
     // console.log("pressed");
     const matches = this.state.movies.filter(match => match.title === this.state.searchInput);
     this.setState({ movieMatch: matches });
+    this.setState({ pressed: true });
   }
 
   //handler for add input
@@ -73,59 +77,108 @@ class App extends React.Component {
 
   watchedHandler(event) {
     event.preventDefault();
-    this.setState({setValue: false});
+    this.setState({ setValue: false });
   }
 
   toWatchHandler(event) {
     event.preventDefault();
-    this.setState({setValue: true});
+    this.setState({ setValue: true });
   }
- //handler to change the state of each movie to true
+  //handler to change the state of each movie to true
   toggleHandler(event, title) {
     event.preventDefault();
     const name = title;
     console.log('The button was pressed');
-    this.setState({movieSelected: title});
+    this.setState({ movieSelected: title });
     //filter movies and return everything except the target movie
     const newArray = this.state.movies.filter(match => match.title !== title);
-    this.setState({movies: newArray});
-    this.setState({moviesWatched: [...this.state.moviesWatched, {title: title, watched: true}]})
-      //set state of movies to that new array
+    this.setState({ movies: newArray });
+    this.setState({ moviesWatched: [...this.state.moviesWatched, { title: title, watched: true }] });
+    //set state of movies to that new array
     // this.setState({movies: {title: name, watched: false}});
   }
 
+  //handler to move it back to movies not watched
+  toggle2Handler(event, title) {
+    event.preventDefault();
+
+    const name = title;
+    this.setState({ movieSelected: title });
+    const newArray = this.state.moviesWatched.filter(match => match.title !== title);
+    this.setState({ moviesWatched: newArray });
+    this.setState({ movies: [...this.state.movies, { title: title, watched: true }] });
+  }
+
+  //if pressed is true and movieMatch is an empty string
+    // no result found
+    // {(this.state.pressed === true && this.state.movieMatch === '' ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>No result found</div>)}
+
 
   render() {
+
     return (
-      <div>
-        <h2>Movie List</h2>
-        <form>
-          <input onChange={this.inputAddHandler} type="text" placeholder="Add movie title here"></input>
-          <button onClick={this.addButtonHandler} >Add</button>
-        </form>
+      <div class='main'>
+        <Grid container spacing={3}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
+            <h2>Movie List</h2>
+          </Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
+            <form>
+              <input onChange={this.inputAddHandler} type="text" placeholder="Add movie title here"></input>
+              <button onClick={this.addButtonHandler} >Add</button>
+            </form>
+          </Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}>
+            <form>
+              <button onClick={this.watchedHandler} >Watched</button>
+              <button onClick={this.toWatchHandler} >To Watch</button>
+            </form>
+          </Grid>
+          <Grid item xs={3}>
+            <form>
+              <input onChange={this.inputHandler} type='text' placeholder='Search...'></input>
+              <button onClick={this.sumbitButtonHandler}>Go!</button>
+            </form>
+          </Grid>
+          <Grid item xs={3}></Grid>
 
-        <form>
-          <input onChange={this.inputHandler} type='text' placeholder='Search movie title'></input>
-          <button onClick={this.sumbitButtonHandler}>Submit</button>
-        </form>
-        <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>
+          {/* {(this.state.setValue === false) ?  <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggle2Handler}/> :  <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>} */}
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
+            {(this.state.pressed === true
+              ?
+              <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} />
+              :
+              (this.state.setValue === false) ? <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggle2Handler} /> : <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler} />
+            )}
+          </Grid>
+          <Grid item xs={3}></Grid>
 
-        <h2>These are the matched movies</h2>
-        {(this.state.movieMatch !== '') ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>There is no Match</div>}
+          {/* {(this.state.pressed === true && this.state.movieMatch === '' ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>No result found</div>)} */}
 
-        <h2>Movies Added</h2>
-        {(this.state.addedMovies === '') ? <div> No added Movies</div> : <MovieList movies={this.state.addedMovies} toggleHandler={this.toggleHandler} />}
+          {/* <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/> */}
+
+          {/* <h2>These are the matched movies</h2>
+        {(this.state.movieMatch !== '') ? <Matches matches={this.state.movieMatch} toggleHandler={this.toggleHandler} /> : <div>There is no Match</div>} */}
+
+          {/* <h2>Movies Added</h2>
+        {(this.state.addedMovies === '') ? <div> No added Movies</div> : <MovieList movies={this.state.addedMovies} toggleHandler={this.toggleHandler} />} */}
 
 
-        <form>
+          {/* <form>
           <button onClick={this.watchedHandler} >Watched</button>
           <button onClick={this.toWatchHandler} >To Watch</button>
-        </form>
+        </form> */}
 
-        <h2>Test</h2>
+          {/* <h2>Test</h2> */}
 
-        {(this.state.setValue === false) ?  <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggleHandler}/> :  <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>}
-
+          {/* {(this.state.setValue === false) ?  <MovieList movies={this.state.moviesWatched} toggleHandler={this.toggle2Handler}/> :  <MovieList movies={this.state.movies} toggleHandler={this.toggleHandler}/>} */}
+        </Grid>
       </div>)
   }
 }
